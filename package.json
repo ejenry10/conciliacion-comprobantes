@@ -1,0 +1,23 @@
+{
+  "name": "conciliacion-sunat",
+  "version": "0.1.0",
+  "description": "Herramienta personal de conciliacion de comprobantes electronicos (MongoDB vs SUNAT) - Fase 1: lectura de MongoDB",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "dev:fase2": "ts-node src/fase2-test.ts",
+    "dev:fase4": "ts-node src/fase4-conciliacion.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "fs": "^0.0.1-security",
+    "mongodb": "^6.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.20.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}

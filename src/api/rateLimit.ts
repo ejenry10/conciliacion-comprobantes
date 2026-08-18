@@ -5,10 +5,6 @@ const MAX_REQUESTS_POR_VENTANA = 20;
 
 const contadores = new Map<string, { count: number; reiniciaEn: number }>();
 
-/**
- * Rate limit muy simple por IP, en memoria (suficiente para un solo
- * consumidor como Make; si el proceso reinicia, se resetea, y esta bien).
- */
 export function rateLimit(req: Request, res: Response, next: NextFunction): void {
   const clave = req.ip ?? 'desconocido';
   const ahora = Date.now();

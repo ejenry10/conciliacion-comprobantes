@@ -13,4 +13,5 @@ export interface ComprobanteInterno {
   fechaEmision: Date;
   importeTotal: number | null;
   estadoInterno: string; // tal como esta almacenado en tu sistema, ej. 'ACEPTADO' | 'ANULADO'
+  observacionesEnvio: string | null;
 }

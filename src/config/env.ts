@@ -33,4 +33,8 @@ export const env = {
     process.env.SUNAT_CREDENTIALS_PATH ?? './sunat-credenciales.json',
   // Carpeta donde se guarda el historial de consultas (fuera de la BD empresarial).
   historialDir: process.env.HISTORIAL_DIR ?? './historial',
+  // Token compartido que Make debe enviar en el header Authorization: Bearer <token>.
+  // No 'required' porque los scripts sueltos (fase1/2/4) no levantan la API.
+  apiToken: process.env.API_TOKEN ?? '',
+  apiPort: Number(process.env.API_PORT) || 3000,
 };

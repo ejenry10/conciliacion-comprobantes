@@ -8,16 +8,19 @@
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
     "dev:fase2": "ts-node src/fase2-test.ts",
-    "dev:fase4": "ts-node src/fase4-conciliacion.ts"
+    "dev:fase4": "ts-node src/fase4-conciliacion.ts",
+    "dev:rechazados": "ts-node src/reporte-rechazados.ts",
+    "dev:api": "ts-node src/api/server.ts"
   },
   "dependencies": {
+    "mongodb": "^6.9.0",
     "dotenv": "^16.4.5",
-    "fs": "^0.0.1-security",
-    "mongodb": "^6.9.0"
+    "express": "^4.21.1"
   },
   "devDependencies": {
-    "@types/node": "^22.20.1",
+    "typescript": "^5.6.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.3"
+    "@types/node": "^22.7.5",
+    "@types/express": "^4.17.21"
   }
 }

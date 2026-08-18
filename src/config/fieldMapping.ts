@@ -6,6 +6,7 @@ export const fieldMapping = {
   fechaEmision: 'sDocFechaEmision',
   importeTotal: 'sTotal',
   estadoInterno: 'estadoEnvioFiscal',
+  observacionesEnvio: 'observacionesEnvio',
 } as const;
 
 export const TIPOS_COMPROBANTE_SUNAT = [

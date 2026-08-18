@@ -1,7 +1,7 @@
 import express from 'express';
 import { router } from './routes';
 import { requireApiToken } from './auth';
-import { rateLimit } from './rateLimit';
+import { rateLimit } from './ratelimit';
 import { env } from '../config/env';
 
 const app = express();

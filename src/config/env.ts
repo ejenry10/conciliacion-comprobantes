@@ -36,5 +36,7 @@ export const env = {
   // Token compartido que Make debe enviar en el header Authorization: Bearer <token>.
   // No 'required' porque los scripts sueltos (fase1/2/4) no levantan la API.
   apiToken: process.env.API_TOKEN ?? '',
-  apiPort: Number(process.env.API_PORT) || 3000,
+  // Render (y la mayoria de hostings) asignan el puerto via PORT. API_PORT
+  // queda como fallback para correrlo local con un puerto fijo.
+  apiPort: Number(process.env.PORT || process.env.API_PORT) || 3000,
 };

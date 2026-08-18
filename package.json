@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/api/server.js",
     "dev": "ts-node src/index.ts",
     "dev:fase2": "ts-node src/fase2-test.ts",
     "dev:fase4": "ts-node src/fase4-conciliacion.ts",

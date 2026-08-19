@@ -7,7 +7,7 @@ import { registrarCorrida } from './historial/historialStore';
 import { fieldMapping } from './config/fieldMapping';
 import { env } from './config/env';
 
-const TAMANO_MUESTRA = 20;
+const TAMANO_MUESTRA = 100;
 const ESPERA_ENTRE_CONSULTAS_MS = 300;
 
 // true = usa todos los RUCs que tengan credenciales en sunat-credenciales.json.

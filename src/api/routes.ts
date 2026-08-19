@@ -47,6 +47,13 @@ function fechaDeAyer(): string {
   return hoy.toISOString().slice(0, 10);
 }
 
+/** Fecha de hace N dias (hora Peru), como YYYY-MM-DD. */
+function fechaHaceNDias(n: number): string {
+  const hoy = new Date(`${fechaHoyPeru()}T00:00:00.000Z`);
+  hoy.setUTCDate(hoy.getUTCDate() - n);
+  return hoy.toISOString().slice(0, 10);
+}
+
 /**
  * GET /api/conciliacion/pendientes?ruc=20600565321,20603618816&limit=50
  * Solo lee Mongo, no llama a SUNAT. Util para que Make vea cuantos hay
@@ -93,13 +100,18 @@ router.get('/api/conciliacion/pendientes', async (req: Request, res: Response) =
  *   "limit": 50,                    // opcional, tope duro 200
  *   "fechaDesde": "2026-08-17",     // opcional, YYYY-MM-DD
  *   "fechaHasta": "2026-08-17",     // opcional, YYYY-MM-DD (incluye todo ese dia)
- *   "diaAnterior": true             // opcional, atajo: equivale a fechaDesde=fechaHasta=ayer
+ *   "diaAnterior": true,            // opcional, atajo: equivale a fechaDesde=fechaHasta=ayer
+ *   "diasAtrasBajas": 3             // opcional: ADEMAS del rango normal, siempre revisa
+ *                                    // tambien cualquier comprobante en estado B (dado de
+ *                                    // baja) emitido en los ultimos N dias, sin importar si
+ *                                    // cae fuera del rango de fecha principal. Sirve porque
+ *                                    // una anulacion puede pasar dias despues de la emision.
  * }
  * Ejecuta el flujo completo: Mongo -> SUNAT -> comparacion -> historial.
  */
 router.post('/api/conciliacion/verificar', async (req: Request, res: Response) => {
   try {
-    const { rucs, limit, fechaDesde, fechaHasta, diaAnterior } = req.body ?? {};
+    const { rucs, limit, fechaDesde, fechaHasta, diaAnterior, diasAtrasBajas } = req.body ?? {};
 
     if (
       rucs !== undefined &&
@@ -116,28 +128,52 @@ router.post('/api/conciliacion/verificar', async (req: Request, res: Response) =
       res.status(400).json({ error: 'diaAnterior debe ser true o false' });
       return;
     }
+    if (
+      diasAtrasBajas !== undefined &&
+      (typeof diasAtrasBajas !== 'number' || diasAtrasBajas <= 0)
+    ) {
+      res.status(400).json({ error: 'diasAtrasBajas debe ser un numero positivo' });
+      return;
+    }
 
     const tamanoMuestra = Math.min(limit ?? LIMITE_MAX_VERIFICAR, LIMITE_MAX_VERIFICAR);
 
-    const condiciones: Filter<Document>[] = [];
-
-    if (Array.isArray(rucs) && rucs.length > 0) {
-      condiciones.push({ [fieldMapping.ruc]: { $in: rucs } });
-    }
+    const condicionesRuc: Filter<Document>[] =
+      Array.isArray(rucs) && rucs.length > 0 ? [{ [fieldMapping.ruc]: { $in: rucs } }] : [];
 
     // "diaAnterior" es un atajo; si ademas mandan fechaDesde/fechaHasta
     // explicitos, esos tienen prioridad.
     const desdeStr = fechaDesde ?? (diaAnterior ? fechaDeAyer() : undefined);
     const hastaStr = fechaHasta ?? (diaAnterior ? fechaDeAyer() : undefined);
 
+    const condicionesPrincipal: Filter<Document>[] = [...condicionesRuc];
     if (desdeStr || hastaStr) {
       const rangoFecha: Record<string, Date> = {};
       if (desdeStr) rangoFecha.$gte = inicioDiaPeruUTC(desdeStr, 'fechaDesde');
       if (hastaStr) rangoFecha.$lte = finDiaPeruUTC(hastaStr, 'fechaHasta');
-      condiciones.push({ [fieldMapping.fechaEmision]: rangoFecha });
+      condicionesPrincipal.push({ [fieldMapping.fechaEmision]: rangoFecha });
     }
 
-    const filtro: Filter<Document> = condiciones.length > 0 ? { $and: condiciones } : {};
+    const filtroPrincipal: Filter<Document> =
+      condicionesPrincipal.length > 0 ? { $and: condicionesPrincipal } : {};
+
+    let filtro: Filter<Document> = filtroPrincipal;
+
+    if (diasAtrasBajas !== undefined) {
+      const filtroBajas: Filter<Document> = {
+        $and: [
+          ...condicionesRuc,
+          { [fieldMapping.estadoInterno]: 'B' },
+          { [fieldMapping.fechaEmision]: { $gte: inicioDiaPeruUTC(fechaHaceNDias(diasAtrasBajas), 'diasAtrasBajas') } },
+        ],
+      };
+      // Sin rango de fecha principal (ej. solo mandaron diasAtrasBajas): usamos
+      // directo el filtro de bajas. Con rango principal: OR entre ambos.
+      filtro =
+        condicionesPrincipal.length > 0
+          ? { $or: [filtroPrincipal, filtroBajas] }
+          : filtroBajas;
+    }
 
     const resultado = await ejecutarConciliacion(filtro, tamanoMuestra);
 

@@ -1,10 +1,73 @@
 {
+  "10180290899": {
+    "razonsocial": "GARCIA RODRIGUEZ OBER NELSON",
+    "clientId": "52d89486-48dd-47a7-9c2b-b3f85b398618",
+    "clientSecret": "gCP4v5WLm03I9cXno+YRHQ=="
+  },
+  "10410863231": {
+    "razonsocial": "GARCIA RODRIGUEZ DANIEL ARMANDO",
+    "clientId": "5b5b7f7f-4718-4f8d-bca7-30750ac3a252",
+    "clientSecret": "xq+yA2TBthtO4v2CqjhwXg=="
+  },
+  "10439941885": {
+    "razonsocial": "ESPINOZA BENITES MILAGROS VALERY",
+    "clientId": "6f558778-eaee-489a-b170-8a1b79f64fcb",
+    "clientSecret": "EoTsKaM1+nF60gtpv6gHRQ=="
+  },
+  "10459227712": {
+    "razonsocial": "ESPINOZA BENITES MARIELLA DEL CARMEN",
+    "clientId": "07808858-2bac-49ef-ac4d-0605612db412",
+    "clientSecret": "KC2LhV2oVT+6afSydovadw=="
+  },
+  "10487184051": {
+    "razonsocial": "GAVIDIA RODRIGUEZ BRYAN PAUL",
+    "clientId": "f5fd3e5f-ae4a-4188-a85f-74f1c56df2b5",
+    "clientSecret": "Y4QgH/R1q8+TH0tVwDJZDQ=="
+  },
+
+  "20481275840": {
+    "razonsocial": "DISTRIBUCIONES ARMANDO EN RESIDUOS SOLIDOS SRL",
+    "clientId": "20f80fb3-046a-4a5f-9ddb-42aa29dd2d14",
+    "clientSecret": "95e3Br4ZLIjKs19XAWJmLA=="
+  },
   "20481781117": {
+    "razonsocial": "NEGOCIOS LC.",
     "clientId": "cc19e9f7-db9f-4874-b597-635bc0665088",
     "clientSecret": "xoq+P3Od0J1vEOXIKeWu0w=="
   },
+  "20482254200": {
+    "razonsocial": "LUBRICANTES Y SERVICIOS JUNIOR S.A.C.",
+    "clientId": "c189aa59-a12e-4322-b414-a552bfcc779a",
+    "clientSecret": "/phRD0tRa4LCd2HntytFiw=="
+  },
   "20482614931": {
+    "razonsocial": "BG ELECTRICISTAS E.I.R.L.",
     "clientId": "88d168a4-29a0-48b1-a2c8-83f0bcfed7ce",
     "clientSecret": "3rVSFe8aNew5s6pC+tHycw=="
+  },
+  "20540034631": {
+    "razonsocial": "CREACIONES MARIANA S.A.C.",
+    "clientId": "8d76675a-57f1-4f31-8df8-165fd99c4652",
+    "clientSecret": "NofUdNK6lL/JC1wQydZlAQ=="
+  },
+  "20559814262": {
+    "razonsocial": "NBA SOLUCIONES EMPRESARIALES S.A.C.",
+    "clientId": "77f8d25d-c43f-4729-bbaf-e504c28cdd9f",
+    "clientSecret": "zQO18zAKwc1Jbl8GhTcw5A=="
+  },
+  "20600565321": {
+    "razonsocial": "SERVICIOS GENERALES H&B HNOS E.I.R.L.",
+    "clientId": "6361e0c6-ef40-43c4-b8b9-916780448a03",
+    "clientSecret": "wkEuLQsLG9T8IeRfqUyBOA=="
+  },
+  "20603618816": {
+    "razonsocial": "FOXWAGEN OIL S. A. C.",
+    "clientId": "2fed1300-b1c9-42e1-a373-99b0b2d233d9",
+    "clientSecret": "/4SSqozP5cbJUKAoOFmN1g=="
+  },
+  "20609520478": {
+    "razonsocial": "AGROMAX GEO S.A.C.",
+    "clientId": "10f25eae-3186-4083-9fd4-2858a52eefc6",
+    "clientSecret": "NurSOcf4AVyiBIALrs0V7g=="
   }
 }

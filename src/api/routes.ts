@@ -3,56 +3,18 @@ import { Filter, Document } from 'mongodb';
 import { obtenerComprobantesParaVerificar } from '../db/comprobantesRepository';
 import { ejecutarConciliacion } from '../conciliacion/ejecutarConciliacion';
 import { fieldMapping } from '../config/fieldMapping';
+import {
+  inicioDiaPeruUTC,
+  finDiaPeruUTC,
+  fechaDeAyer,
+  fechaHaceNDias,
+} from '../utils/fechas';
 
 export const router = Router();
 
 // Tope duro: aunque Make (o un error) pida mas, nunca disparamos mas de
 // esto en una sola llamada. Protege el cupo de consultas a SUNAT.
 const LIMITE_MAX_VERIFICAR = 200;
-
-// Peru es UTC-5: hora UTC = hora local + 5. Los Date guardados en Mongo son
-// UTC real, asi que para calcular "el dia de ayer en hora de Peru" hay que
-// desplazar los limites 5 horas, no usar medianoche UTC tal cual.
-const PERU_UTC_OFFSET_HORAS = 5;
-
-/** Convierte YYYY-MM-DD (interpretado como dia calendario en Peru) al inicio de ese dia, en UTC. */
-function inicioDiaPeruUTC(fechaYYYYMMDD: string, nombreCampo: string): Date {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(fechaYYYYMMDD)) {
-    throw new Error(`${nombreCampo} debe tener formato YYYY-MM-DD`);
-  }
-  const fecha = new Date(`${fechaYYYYMMDD}T00:00:00.000Z`);
-  if (Number.isNaN(fecha.getTime())) {
-    throw new Error(`${nombreCampo} no es una fecha valida`);
-  }
-  fecha.setUTCHours(fecha.getUTCHours() + PERU_UTC_OFFSET_HORAS);
-  return fecha;
-}
-
-/** Fin de ese mismo dia calendario en Peru (23:59:59.999 local), en UTC. */
-function finDiaPeruUTC(fechaYYYYMMDD: string, nombreCampo: string): Date {
-  const inicio = inicioDiaPeruUTC(fechaYYYYMMDD, nombreCampo);
-  return new Date(inicio.getTime() + 24 * 60 * 60 * 1000 - 1);
-}
-
-/** "Hoy" segun hora de Peru (no UTC), como YYYY-MM-DD. */
-function fechaHoyPeru(): string {
-  const ahoraLocal = new Date(Date.now() - PERU_UTC_OFFSET_HORAS * 60 * 60 * 1000);
-  return ahoraLocal.toISOString().slice(0, 10);
-}
-
-/** Fecha de ayer segun hora de Peru, como YYYY-MM-DD. */
-function fechaDeAyer(): string {
-  const hoy = new Date(`${fechaHoyPeru()}T00:00:00.000Z`);
-  hoy.setUTCDate(hoy.getUTCDate() - 1);
-  return hoy.toISOString().slice(0, 10);
-}
-
-/** Fecha de hace N dias (hora Peru), como YYYY-MM-DD. */
-function fechaHaceNDias(n: number): string {
-  const hoy = new Date(`${fechaHoyPeru()}T00:00:00.000Z`);
-  hoy.setUTCDate(hoy.getUTCDate() - n);
-  return hoy.toISOString().slice(0, 10);
-}
 
 /**
  * GET /api/conciliacion/pendientes?ruc=20600565321,20603618816&limit=50
